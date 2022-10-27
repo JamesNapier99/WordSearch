@@ -42,7 +42,7 @@ void dictionary::readDict(const string& file)
     string element;
     while (fin >> element)
     {
-        transform(element.begin(), element.end(), element.begin(), ::tolower);  // only need this if case matters
+        // transform(element.begin(), element.end(), element.begin(), ::tolower);  // only need this if case matters
         wordList.push_back(element);
     }
     fin.close();
