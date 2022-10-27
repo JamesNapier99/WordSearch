@@ -33,7 +33,7 @@ void dictionary::readDict(const string& file)
     ifstream fin;
     string path = file;
     fin.open(path.c_str());
-    if(!fin)
+    if (!fin)
     {
         // error handling
         cout << "Houston, we have a problem" << endl;
@@ -60,14 +60,13 @@ ostream& operator << (ostream& ostr, const dictionary& rhs)
 
 void dictionary::sort()
 {
-
     string swap;
-    for (int i = 0; i < wordList.size()-2; i++)
+    for (int i = 0; i < wordList.size() - 2; i++)
     {
         int pos = i;
-        for (int j = i+1; j < wordList.size()-1; j++)
+        for (int j = i + 1; j < wordList.size() - 1; j++)
         {
-            if (wordList[pos]>wordList[j])
+            if (wordList[pos] > wordList[j])
             {
                 pos = j;
             }
@@ -79,21 +78,21 @@ void dictionary::sort()
             wordList[i] = wordList[pos];
             wordList[pos] = swap;
         }
-        
+
 
     }
-    
+
 }
 #pragma endregion Dictionary
 //=============================================================================
 // Grid Methods
 //=============================================================================
 #pragma region Grid
-grid::grid(const string& path) 
+grid::grid(const string& path)
 {
     ifstream fin;
     fin.open(path.c_str());
-    if(!fin)
+    if (!fin)
     {
         // error handling
         cout << "Houston, we have a problem" << endl;
@@ -103,7 +102,7 @@ grid::grid(const string& path)
 
     getline(fin, element);
 
-    size = stoi(element.substr(0,2));
+    size = stoi(element.substr(0, 2));
     matrix<string> newMat(size, size);
     letters = newMat;
 
@@ -115,18 +114,35 @@ grid::grid(const string& path)
         }
     }
 }
+
+ostream& operator << (ostream& ostr, const grid& rhs)
+{
+    for (int i = 0; i < rhs.letters.rows(); i++)
+    {
+        for (int j = 0; j < rhs.letters.cols(); j++)
+        {
+            cout << rhs.letters[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    return ostr;
+}
+
 #pragma endregion Grid
 //=============================================================================
 // Global Functions
 //=============================================================================
 #pragma region func
+void findMatches(const grid& searchGrid, const dictionary& searchDictionary)
+{
+
+}
+
 void search()
 {
-    string file;
-    cout << "Please enter the file name for your grid: \n";
-    cin >> file;
-
-    string dPath = "Dictionary";
+    //sort the dictionary file.
+    string dPath = "../Dictionary.txt"; //for visual studio code project
+    //string dPath = "Dictionary" //for regular implementation
 
     dictionary dict;
     dict.readDict(dPath);
@@ -134,11 +150,21 @@ void search()
 
     cout << "\nFinished Sorting\n";
 
-    grid newGrid(file);
+    //identify the grid to search for words
+    string grid_file_name;
+    cout << "Please enter the file name for your grid: \n";
+    cin >> grid_file_name;
+
+    //initialize the grid object, then print it out
+    grid newGrid(grid_file_name);
+    cout << newGrid;
+
+    findMatches(newGrid, dict);
 }
+
 #pragma endregion func
 //=============================================================================
-int main() 
+int main()
 {
     /*
     dictionary dict;
@@ -147,5 +173,5 @@ int main()
     dict.sort();
     cout << temp << endl;
     */
-   search();
+    search();
 }

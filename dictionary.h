@@ -15,7 +15,7 @@ public:
 
     /* Methods */
     void readDict(const std::string& file);
-    friend std::ostream& operator << 
+    friend std::ostream& operator <<
         (std::ostream& ostr, const dictionary& rhs);
     void sort();
     void lookup();  // placeholder, probs need to be something different
