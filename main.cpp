@@ -283,10 +283,14 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
     int minLength = 5;
     vector<string> allWords = allPossibleWords(minLength, n, allFullRows);
 
+    /*
+    * For each word in allWords, check dictionary for said word and move to new allWords?
+    */
+
     //print all words found in allWords
     for (string word : allWords)
     {
-        cout << word << " ";
+        cout << word << " \n";
     }
 }
 
