@@ -128,14 +128,70 @@ ostream& operator << (ostream& ostr, const grid& rhs)
     return ostr;
 }
 
+int grid::getLength()
+{
+    return letters.rows();
+}
+
+string grid::getLetterAt(int r, int c)
+{
+    return letters[r][c];
+}
+
 #pragma endregion Grid
 //=============================================================================
 // Global Functions
 //=============================================================================
 #pragma region func
-void findMatches(const grid& searchGrid, const dictionary& searchDictionary)
+void findMatches(grid& searchGrid, const dictionary& searchDictionary)
 {
+    int n = searchGrid.getLength();
+    matrix<string> allFullRows(4 * n, n);
 
+    //get all horizontal rows
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            //get all horizontal rows
+            allFullRows[i][j] = searchGrid.getLetterAt(i, j);
+
+            //get all vertical rows
+            allFullRows[i + n][j] = searchGrid.getLetterAt(j, i);
+
+            //get first horizontal row
+            int checkR = i + j;
+            if (checkR >= n)
+            {
+                checkR = checkR - n;
+            }
+            allFullRows[i + 2 * n][j] = searchGrid.getLetterAt(checkR, j);
+
+            //second horizontal row
+            checkR = i - j;
+            if (checkR < 0)
+            {
+                checkR = checkR + n;
+            }
+            allFullRows[i + 3 * n][j] = searchGrid.getLetterAt(checkR, j);
+
+        }
+    }
+
+
+    //print allFullRows
+    for (int i = 0; i < 4 * n; i++)
+    {
+        if (i % n == 0)
+        {
+            cout << "\n";
+        }
+        for (int j = 0; j < n; j++)
+        {
+            cout << allFullRows[i][j] << " ";
+        }
+        cout << "\n";
+    }
 }
 
 void search()

@@ -13,8 +13,11 @@ public:
     /* Destructor */
     //~grid();
 
+    int getLength();
+    string getLetterAt(int r, int c);
+
     /* Methods */
     friend void findMatches(const dictionary& dict, const grid& letters);
     friend std::ostream& operator <<
-        (std::ostream& ostr, const grid& rhs);
+        (std::ostream& ostr, const grid& rhs); \
 };
