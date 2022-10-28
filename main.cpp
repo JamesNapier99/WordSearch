@@ -78,8 +78,6 @@ void dictionary::sort()
             wordList[i] = wordList[pos];
             wordList[pos] = swap;
         }
-
-
     }
 
 }
@@ -143,21 +141,22 @@ string grid::getLetterAt(int r, int c)
 // Global Functions
 //=============================================================================
 #pragma region func
-void findMatches(grid& searchGrid, const dictionary& searchDictionary)
+
+matrix<string> grid::getFullRows()
 {
-    int n = searchGrid.getLength();
+    int n = getLength();
     matrix<string> allFullRows(4 * n, n);
 
-    //get all horizontal rows
+    //get all possible n-length rows that could hold words within them
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
             //get all horizontal rows
-            allFullRows[i][j] = searchGrid.getLetterAt(i, j);
+            allFullRows[i][j] = letters[i][j];
 
             //get all vertical rows
-            allFullRows[i + n][j] = searchGrid.getLetterAt(j, i);
+            allFullRows[i + n][j] = letters[j][i];
 
             //get first horizontal row
             int checkR = i + j;
@@ -165,7 +164,7 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
             {
                 checkR = checkR - n;
             }
-            allFullRows[i + 2 * n][j] = searchGrid.getLetterAt(checkR, j);
+            allFullRows[i + 2 * n][j] = letters[checkR][j];
 
             //second horizontal row
             checkR = i - j;
@@ -173,13 +172,52 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
             {
                 checkR = checkR + n;
             }
-            allFullRows[i + 3 * n][j] = searchGrid.getLetterAt(checkR, j);
-
+            allFullRows[i + 3 * n][j] = letters[checkR][j];
         }
     }
 
+    //return all full rows
+    return allFullRows;
+}
 
-    //print allFullRows
+vector<string> allPossibleWords(int minLength, int n, matrix<string> allFullRows)
+{
+    vector<string> allWords;
+    for (int i = 0; i < 4 * n; i++)
+    {
+        //now on row i, need all words within i.
+        for (int j = 0; j < n; j++) //iterate through all starting letters
+        {
+            //iterate through all possible lengths
+            for (int length = minLength; length < n; length++)
+            {
+                string word = "";
+                //construct word of given length from starting letter
+                for (int lengthi = 0; lengthi < length; lengthi++)
+                {
+                    int rValue = j + lengthi;
+                    if (rValue >= n)
+                    {
+                        rValue = rValue - n;
+                    }
+                    word = word + allFullRows[i][rValue];
+                }
+
+                //after having constructed word, append it to list of words
+                allWords.push_back(word);
+            }
+        }
+    }
+    return allWords;
+}
+
+void findMatches(grid& searchGrid, const dictionary& searchDictionary)
+{
+    int n = searchGrid.getLength();
+    matrix<string> allFullRows(4 * n, n);
+    allFullRows = searchGrid.getFullRows();
+
+    //print the allFullRows matrix, to show which rows have been found (can be commented out)
     for (int i = 0; i < 4 * n; i++)
     {
         if (i % n == 0)
@@ -191,6 +229,16 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
             cout << allFullRows[i][j] << " ";
         }
         cout << "\n";
+    }
+
+    //find all possible words in allFullRows
+    int minLength = 5;
+    vector<string> allWords = allPossibleWords(minLength, n, allFullRows);
+
+    //print all words found in allWords
+    for (string word : allWords)
+    {
+        cout << word << " ";
     }
 }
 

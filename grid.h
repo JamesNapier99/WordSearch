@@ -15,9 +15,10 @@ public:
 
     int getLength();
     string getLetterAt(int r, int c);
+    matrix<string> getFullRows();
 
     /* Methods */
     friend void findMatches(const dictionary& dict, const grid& letters);
     friend std::ostream& operator <<
-        (std::ostream& ostr, const grid& rhs); \
+        (std::ostream& ostr, const grid& rhs);
 };
