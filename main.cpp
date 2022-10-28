@@ -26,8 +26,16 @@ using namespace std;
 // Dictionary Methods
 //=============================================================================
 #pragma region Dictionary
+
+/*
+* Initializes the dictionary object.
+*/
 dictionary::dictionary() {};    // placeholder
 
+/*
+* Reads file and inputs into dictionary object.
+* file: string of path of the file to read.
+*/
 void dictionary::readDict(const string& file)
 {
     ifstream fin;
@@ -48,6 +56,11 @@ void dictionary::readDict(const string& file)
     fin.close();
 }
 
+/*
+* Overrides the print operator for the dictionary object.
+* ostr: output stream ostr, the output stream to print to. 
+* rhs: dictionary to print out.
+*/
 ostream& operator << (ostream& ostr, const dictionary& rhs)
 {
     int size = rhs.wordList.size();
@@ -58,6 +71,9 @@ ostream& operator << (ostream& ostr, const dictionary& rhs)
     return ostr;
 }
 
+/*
+* Sorts all words in the dictionary object alphabetically.
+*/
 void dictionary::sort()
 {
     string swap;
@@ -86,6 +102,11 @@ void dictionary::sort()
 // Grid Methods
 //=============================================================================
 #pragma region Grid
+
+/*
+* Initializes the grid object from a given file.
+* path: string that gives the path of the file to initialize the grid object from.
+*/
 grid::grid(const string& path)
 {
     ifstream fin;
@@ -113,6 +134,11 @@ grid::grid(const string& path)
     }
 }
 
+/*
+* Overrides the print operator for the grid object.
+* ostr: output stream ostr, the output stream to print to. 
+* rhs: grid to print out.
+*/
 ostream& operator << (ostream& ostr, const grid& rhs)
 {
     for (int i = 0; i < rhs.letters.rows(); i++)
@@ -126,22 +152,27 @@ ostream& operator << (ostream& ostr, const grid& rhs)
     return ostr;
 }
 
+/*
+* Gets the length of the grid object.
+*/
 int grid::getLength()
 {
     return letters.rows();
 }
 
+/*
+* Gets the letter at given index.
+* r: int r, the row to search.
+* c: int c, the col to search.
+*/
 string grid::getLetterAt(int r, int c)
 {
     return letters[r][c];
 }
 
-#pragma endregion Grid
-//=============================================================================
-// Global Functions
-//=============================================================================
-#pragma region func
-
+/*
+* Gets all possible rows on grid from which words can be found.
+*/
 matrix<string> grid::getFullRows()
 {
     int n = getLength();
@@ -180,6 +211,18 @@ matrix<string> grid::getFullRows()
     return allFullRows;
 }
 
+#pragma endregion Grid
+//=============================================================================
+// Global Functions
+//=============================================================================
+#pragma region func
+
+/*
+* Gets all possible words on each row from the given matrix.
+* minLength: the minimum length of a possible word.
+* n: the length of each row.
+* allFullRows: the matrix to search for words from. 
+*/
 vector<string> allPossibleWords(int minLength, int n, matrix<string> allFullRows)
 {
     vector<string> allWords;
@@ -211,6 +254,11 @@ vector<string> allPossibleWords(int minLength, int n, matrix<string> allFullRows
     return allWords;
 }
 
+/*
+* Finds all possible words from given grid.
+* searchGrid: the grid to search.
+* searchDictionary: the dictionary to compare possible words to.
+*/
 void findMatches(grid& searchGrid, const dictionary& searchDictionary)
 {
     int n = searchGrid.getLength();
@@ -242,6 +290,9 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
     }
 }
 
+/*
+* Searches for all words from grid and dictionary files. 
+*/
 void search()
 {
     //sort the dictionary file.
