@@ -58,7 +58,7 @@ void dictionary::readDict(const string& file)
 
 /*
 * Overrides the print operator for the dictionary object.
-* ostr: output stream ostr, the output stream to print to. 
+* ostr: output stream ostr, the output stream to print to.
 * rhs: dictionary to print out.
 */
 ostream& operator << (ostream& ostr, const dictionary& rhs)
@@ -96,6 +96,20 @@ void dictionary::sort()
         }
     }
 
+}
+
+// checks if a word is in the dictionary, returns -1 if not
+void dictionary::lookup(string word, int start = 0, int end = 0)
+{
+    int mid = int((end + start)/2);
+    if (wordList[mid].compare(word) == 0)
+        return mid;
+    if (wordList[mid].compare(word) < 0)
+        return lookup(word, mid, end);
+    if (wordList[mid].compare(word) > 0)
+        return lookup(word, 0, mid);
+
+    return -1;
 }
 #pragma endregion Dictionary
 //=============================================================================
@@ -136,7 +150,7 @@ grid::grid(const string& path)
 
 /*
 * Overrides the print operator for the grid object.
-* ostr: output stream ostr, the output stream to print to. 
+* ostr: output stream ostr, the output stream to print to.
 * rhs: grid to print out.
 */
 ostream& operator << (ostream& ostr, const grid& rhs)
@@ -221,7 +235,7 @@ matrix<string> grid::getFullRows()
 * Gets all possible words on each row from the given matrix.
 * minLength: the minimum length of a possible word.
 * n: the length of each row.
-* allFullRows: the matrix to search for words from. 
+* allFullRows: the matrix to search for words from.
 */
 vector<string> allPossibleWords(int minLength, int n, matrix<string> allFullRows)
 {
@@ -290,12 +304,13 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
     //print all words found in allWords
     for (string word : allWords)
     {
-        cout << word << " \n";
+        if(searchDictionary.lookup(word, 0, searchDictionary.wordList.size()-1))
+            cout << word << " \n";
     }
 }
 
 /*
-* Searches for all words from grid and dictionary files. 
+* Searches for all words from grid and dictionary files.
 */
 void search()
 {

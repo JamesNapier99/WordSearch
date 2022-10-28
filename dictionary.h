@@ -18,5 +18,4 @@ public:
     friend std::ostream& operator <<
         (std::ostream& ostr, const dictionary& rhs);
     void sort();
-    void lookup();  // placeholder, probs need to be something different
-};
+    void lookup(string word,int start = 0, int end = 0);};
