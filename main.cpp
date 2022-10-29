@@ -13,7 +13,6 @@
 #include <fstream>
 #include <stdlib.h>
 #include <vector>
-#include <bits/stdc++.h>        // only need this if case matters
 
 #include "dictionary.h"
 #include "grid.h"
