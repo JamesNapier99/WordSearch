@@ -350,7 +350,7 @@ void search()
 {
     //identify the dictionary to search for words
     string dict_file_name;
-    cout << "Please enter the file name for your grid: \n";
+    cout << "Please enter the file name for your dictionary: \n";
     cin >> dict_file_name;
 
     //sort the dictionary file.
