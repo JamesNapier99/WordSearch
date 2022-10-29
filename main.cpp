@@ -56,7 +56,7 @@ void dictionary::readDict(const string& file)
 }
 
 /*
-* Overrides the print operator for the dictionary object.
+* Overrides the print operatorD for the dictionary object.
 * ostr: output stream ostr, the output stream to print to.
 * rhs: dictionary to print out.
 */
@@ -78,6 +78,7 @@ void dictionary::sort()
     string swap;
     for (int i = 0; i < wordList.size() - 2; i++)
     {
+        cout << i << " of " << wordList.size() << "\n";
         int pos = i;
         for (int j = i + 1; j < wordList.size() - 1; j++)
         {
@@ -88,7 +89,7 @@ void dictionary::sort()
         }
         if (pos != i)
         {
-            cout << "Swapping " << wordList[i] << " and " << wordList[pos] << endl;
+            //cout << "Swapping " << wordList[i] << " and " << wordList[pos] << endl;
             swap = wordList[i];
             wordList[i] = wordList[pos];
             wordList[pos] = swap;
@@ -101,13 +102,15 @@ void dictionary::sort()
 bool dictionary::lookup(string word, int start, int end)
 {
     bool val = false;
-    int mid = int((end + start)/2);
-    if (wordList.empty())
+    int mid = int((end + start) / 2);
+    if (start == end)
         if (wordList[mid].compare(word) == 0)
             val = true;
-        if (wordList[mid].compare(word) < 0)
-            return lookup(word, mid+1, end);
-        if (wordList[mid].compare(word) > 0)
+        else if (wordList[mid].compare(word) == 0)
+            val = true;
+        else if (wordList[mid].compare(word) < 0)
+            return lookup(word, mid + 1, end);
+        else if (wordList[mid].compare(word) > 0)
             return lookup(word, start, mid);
     return val;
 }
@@ -297,11 +300,19 @@ void findMatches(grid& searchGrid, dictionary& searchDictionary)
     int minLength = 5;
     vector<string> allWords = allPossibleWords(minLength, n, allFullRows);
 
+    //cout << searchDictionary << "\n";
+
     //print all words found in allWords
     for (string word : allWords)
     {
-        if(searchDictionary.lookup(word, 0, searchDictionary.wordList.size()-1))
-            cout << word << " \n";
+        if (searchDictionary.lookup(word, 0, searchDictionary.wordList.size() - 1))
+        {
+            cout << "\n" << word << " \n";
+        }
+        else
+        {
+            cout << "n/a" << " ";
+        }
     }
 }
 
@@ -311,7 +322,7 @@ void findMatches(grid& searchGrid, dictionary& searchDictionary)
 void search()
 {
     //sort the dictionary file.
-    string dPath = "Dictionary"; //for visual studio code project
+    string dPath = "../Dictionary_sorted.txt"; //for visual studio code project
     //string dPath = "Dictionary" //for regular implementation
 
     dictionary dict;
@@ -336,6 +347,9 @@ void search()
 //=============================================================================
 int main()
 {
+    string s1 = "helloa";
+    string s2 = "hellob";
+    cout << s2.compare(s1);
     /*
     dictionary dict;
     string temp = "Dictionary";
