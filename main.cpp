@@ -37,15 +37,19 @@ dictionary::dictionary() {};    // placeholder
 */
 void dictionary::readDict(const string& file)
 {
+    //opens dictionary file from given file path
     ifstream fin;
     string path = file;
     fin.open(path.c_str());
+
+    //throw error if file not found.
     if (!fin)
     {
         // error handling
         cout << "Houston, we have a problem" << endl;
     }
 
+    //traverse dictionary file and append each word to wordList.
     string element;
     while (fin >> element)
     {
@@ -59,6 +63,7 @@ void dictionary::readDict(const string& file)
 * Overrides the print operatorD for the dictionary object.
 * ostr: output stream ostr, the output stream to print to.
 * rhs: dictionary to print out.
+* returns ostream with the printed dictionary.
 */
 ostream& operator << (ostream& ostr, const dictionary& rhs)
 {
@@ -98,20 +103,46 @@ void dictionary::sort()
 
 }
 
-// checks if a word is in the dictionary, returns -1 if not
+/*
+* Checks if a word is in the dictionary, returns 0 if not.
+* word: string to check for within dictionary.
+* start: int index to start to look for word in.
+* end: int index to end to look for word in.
+* return bool of 1 if word is within dictionary, and 0 if not.
+*/
 bool dictionary::lookup(string word, int start, int end)
 {
     bool val = false;
     int mid = int((end + start) / 2);
+
+    //if at last possible case that word can still be at mid, check.
     if (start == end)
+    {
         if (wordList[mid].compare(word) == 0)
-            val = true;
-        else if (wordList[mid].compare(word) == 0)
-            val = true;
-        else if (wordList[mid].compare(word) < 0)
-            return lookup(word, mid + 1, end);
-        else if (wordList[mid].compare(word) > 0)
-            return lookup(word, start, mid);
+        {
+            return true;
+        }
+    }
+
+    //if out of bounds, return false.
+    else if (start > end)
+    {
+        return false;
+    }
+
+    //check if word is in mid.
+    else if (wordList[mid].compare(word) == 0)
+        return true;
+
+    //check if word is larger than mid alphabetically.
+    else if (wordList[mid].compare(word) < 0)
+        return lookup(word, mid + 1, end);
+
+    //check if word is smaller than mid alphabetically.
+    else if (wordList[mid].compare(word) > 0)
+        return lookup(word, start, mid - 1);
+
+    //else return false
     return val;
 }
 #pragma endregion Dictionary
@@ -126,22 +157,28 @@ bool dictionary::lookup(string word, int start, int end)
 */
 grid::grid(const string& path)
 {
+    //opens the file given with the path input.
     ifstream fin;
     fin.open(path.c_str());
+
+    //throws error if file not found.
     if (!fin)
     {
         // error handling
         cout << "Houston, we have a problem" << endl;
     }
+
     int size;
     string element;
 
+    //get first line and determine the size from it.
     getline(fin, element);
 
     size = stoi(element.substr(0, 2));
     matrix<string> newMat(size, size);
     letters = newMat;
 
+    //traverse file and append each element to letters matrix.
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
@@ -155,6 +192,7 @@ grid::grid(const string& path)
 * Overrides the print operator for the grid object.
 * ostr: output stream ostr, the output stream to print to.
 * rhs: grid to print out.
+* returns ostream with printed grid object.
 */
 ostream& operator << (ostream& ostr, const grid& rhs)
 {
@@ -171,6 +209,7 @@ ostream& operator << (ostream& ostr, const grid& rhs)
 
 /*
 * Gets the length of the grid object.
+* returns the integer length of the letters object within grid.
 */
 int grid::getLength()
 {
@@ -178,17 +217,8 @@ int grid::getLength()
 }
 
 /*
-* Gets the letter at given index.
-* r: int r, the row to search.
-* c: int c, the col to search.
-*/
-string grid::getLetterAt(int r, int c)
-{
-    return letters[r][c];
-}
-
-/*
 * Gets all possible rows on grid from which words can be found.
+* returns matrix with all possible rows to check.
 */
 matrix<string> grid::getFullRows()
 {
@@ -239,6 +269,7 @@ matrix<string> grid::getFullRows()
 * minLength: the minimum length of a possible word.
 * n: the length of each row.
 * allFullRows: the matrix to search for words from.
+* returns vector with all possible words stored in it.
 */
 vector<string> allPossibleWords(int minLength, int n, matrix<string> allFullRows)
 {
@@ -300,18 +331,14 @@ void findMatches(grid& searchGrid, dictionary& searchDictionary)
     int minLength = 5;
     vector<string> allWords = allPossibleWords(minLength, n, allFullRows);
 
-    //cout << searchDictionary << "\n";
-
     //print all words found in allWords
+    cout << "Words Found: \n";
     for (string word : allWords)
     {
+        //check if the word from allWords is within the given dictionary, if so, print it.
         if (searchDictionary.lookup(word, 0, searchDictionary.wordList.size() - 1))
         {
-            cout << "\n" << word << " \n";
-        }
-        else
-        {
-            cout << "n/a" << " ";
+            cout << word << "\n";
         }
     }
 }
@@ -321,15 +348,17 @@ void findMatches(grid& searchGrid, dictionary& searchDictionary)
 */
 void search()
 {
+    //identify the dictionary to search for words
+    string dict_file_name;
+    cout << "Please enter the file name for your grid: \n";
+    cin >> dict_file_name;
+
     //sort the dictionary file.
-    string dPath = "../Dictionary_sorted.txt"; //for visual studio code project
-    //string dPath = "Dictionary" //for regular implementation
-
     dictionary dict;
-    dict.readDict(dPath);
-    //dict.sort();
+    dict.readDict(dict_file_name);
+    dict.sort();
 
-    cout << "\nFinished Sorting\n";
+    cout << "\nFinished Sorting the Dictionary!\n";
 
     //identify the grid to search for words
     string grid_file_name;
@@ -340,6 +369,7 @@ void search()
     grid newGrid(grid_file_name);
     cout << newGrid;
 
+    //find all possible words from the grid
     findMatches(newGrid, dict);
 }
 
@@ -347,15 +377,6 @@ void search()
 //=============================================================================
 int main()
 {
-    string s1 = "helloa";
-    string s2 = "hellob";
-    cout << s2.compare(s1);
-    /*
-    dictionary dict;
-    string temp = "Dictionary";
-    dict.readDict(temp);
-    dict.sort();
-    cout << temp << endl;
-    */
+    //start search function.
     search();
 }

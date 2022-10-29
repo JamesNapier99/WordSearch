@@ -17,4 +17,5 @@ public:
     friend std::ostream& operator <<
         (std::ostream& ostr, const dictionary& rhs);
     void sort();
-    bool lookup(std::string word, int start = 0, int end = 0);};
+    bool lookup(std::string word, int start = 0, int end = 0);
+};

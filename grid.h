@@ -14,7 +14,6 @@ public:
     //~grid();
 
     int getLength();
-    string getLetterAt(int r, int c);
     matrix<string> getFullRows();
 
     /* Methods */
