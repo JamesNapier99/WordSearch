@@ -5,9 +5,10 @@
 class dictionary
 {
 private:
+
+public:
     /* data */
     std::vector<std::string> wordList;
-public:
     /* Constructor */
     dictionary();
     /* Destructor */
@@ -18,4 +19,4 @@ public:
     friend std::ostream& operator <<
         (std::ostream& ostr, const dictionary& rhs);
     void sort();
-    void lookup(string word,int start = 0, int end = 0);};
+    int lookup(std::string word,int start, int end);};

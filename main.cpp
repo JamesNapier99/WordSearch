@@ -13,7 +13,6 @@
 #include <fstream>
 #include <stdlib.h>
 #include <vector>
-#include <bits/stdc++.h>        // only need this if case matters
 
 #include "dictionary.h"
 #include "grid.h"
@@ -99,7 +98,7 @@ void dictionary::sort()
 }
 
 // checks if a word is in the dictionary, returns -1 if not
-void dictionary::lookup(string word, int start = 0, int end = 0)
+int dictionary::lookup(string word, int start, int end)
 {
     int mid = int((end + start)/2);
     if (wordList[mid].compare(word) == 0)
@@ -273,7 +272,7 @@ vector<string> allPossibleWords(int minLength, int n, matrix<string> allFullRows
 * searchGrid: the grid to search.
 * searchDictionary: the dictionary to compare possible words to.
 */
-void findMatches(grid& searchGrid, const dictionary& searchDictionary)
+void findMatches(grid& searchGrid, dictionary& searchDictionary)
 {
     int n = searchGrid.getLength();
     matrix<string> allFullRows(4 * n, n);
