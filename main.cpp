@@ -99,17 +99,18 @@ void dictionary::sort()
 }
 
 // checks if a word is in the dictionary, returns -1 if not
-void dictionary::lookup(string word, int start = 0, int end = 0)
+bool dictionary::lookup(string word, int start, int end)
 {
+    bool val = false;
     int mid = int((end + start)/2);
-    if (wordList[mid].compare(word) == 0)
-        return mid;
-    if (wordList[mid].compare(word) < 0)
-        return lookup(word, mid, end);
-    if (wordList[mid].compare(word) > 0)
-        return lookup(word, 0, mid);
-
-    return -1;
+    if (wordList.empty())
+        if (wordList[mid].compare(word) == 0)
+            val = true;
+        if (wordList[mid].compare(word) < 0)
+            return lookup(word, mid+1, end);
+        if (wordList[mid].compare(word) > 0)
+            return lookup(word, start, mid);
+    return val;
 }
 #pragma endregion Dictionary
 //=============================================================================
@@ -273,7 +274,7 @@ vector<string> allPossibleWords(int minLength, int n, matrix<string> allFullRows
 * searchGrid: the grid to search.
 * searchDictionary: the dictionary to compare possible words to.
 */
-void findMatches(grid& searchGrid, const dictionary& searchDictionary)
+void findMatches(grid& searchGrid, dictionary& searchDictionary)
 {
     int n = searchGrid.getLength();
     matrix<string> allFullRows(4 * n, n);
@@ -297,10 +298,6 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
     int minLength = 5;
     vector<string> allWords = allPossibleWords(minLength, n, allFullRows);
 
-    /*
-    * For each word in allWords, check dictionary for said word and move to new allWords?
-    */
-
     //print all words found in allWords
     for (string word : allWords)
     {
@@ -315,7 +312,7 @@ void findMatches(grid& searchGrid, const dictionary& searchDictionary)
 void search()
 {
     //sort the dictionary file.
-    string dPath = "../Dictionary.txt"; //for visual studio code project
+    string dPath = "Dictionary"; //for visual studio code project
     //string dPath = "Dictionary" //for regular implementation
 
     dictionary dict;
