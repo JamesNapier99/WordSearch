@@ -4,6 +4,7 @@
 
 class dictionary
 {
+
 public:
     /* data */
     std::vector<std::string> wordList;
@@ -17,5 +18,6 @@ public:
     friend std::ostream& operator <<
         (std::ostream& ostr, const dictionary& rhs);
     void sort();
+    void qsort(int left = 0, int right = 0);
     bool lookup(std::string word, int start = 0, int end = 0);
 };

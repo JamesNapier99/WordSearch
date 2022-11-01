@@ -13,11 +13,13 @@
 #include <fstream>
 #include <stdlib.h>
 #include <vector>
+#include <cmath>
 
 #include "dictionary.h"
 #include "grid.h"
 #include "d_except.h"
 #include "d_matrix.h"
+#include "heap.h"
 
 using namespace std;
 
@@ -100,7 +102,38 @@ void dictionary::sort()
             wordList[pos] = swap;
         }
     }
+}
 
+void dictionary::qsort(int left, int right)
+/*
+* Sorts all words in the dictionary object using Quick Sort
+*/
+{
+    if(right == 0)
+    {
+        right = wordList.size();
+    }
+    if (left < right)
+    {
+        /* Begin Partitioning*/
+        string x = wordList[right];
+        int i = left - 1;
+        for (int j = left; j < right; j++)
+        {
+            if (wordList[j].compare(x) <= 0)    // based on compare outcomes
+            {
+                i += 1;
+                string temp = wordList[j];
+                wordList[j] = wordList[i];
+                wordList[i] = temp;
+            }
+        }
+        wordList[right] = wordList[i + 1];
+        wordList[i + 1] = x;
+        /* End Partitioning */
+        qsort(left, i);
+        qsort(i + 2, right);
+    }
 }
 
 /*
@@ -260,6 +293,106 @@ matrix<string> grid::getFullRows()
 
 #pragma endregion Grid
 //=============================================================================
+// Grid Methods
+//=============================================================================
+#pragma region Heap
+template <class T>
+
+T heap<T>::getItem(const int& n)
+{
+    return Heap[n];
+}
+
+template <class T>
+int heap<T>::parent(const int& n)
+{
+    if (n < Heap.size() && n >= 0)
+    {
+        return floor(n / 2);
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+template <class T>
+int heap<T>::left(const int& n)
+{
+    if (n < Heap.size() && n >= 0)
+    {
+        return 2 * n;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+template <class T>
+int heap<T>::right(const int& n)
+{
+    if (n < Heap.size())
+    {
+        return 2 * n + 1;
+    }
+    else
+    {
+        return -1;
+    }
+}
+// Not sure if this works
+template <class T>
+heap<T>::heap()
+{
+    vector<T> placeholder;
+    Heap = placeholder;
+}
+
+template <class T>
+void heap<T>::initializeMaxHeap(const vector<T>& list)
+{
+    Heap = list;
+}
+
+
+template <class T>
+void heap<T>::buildMaxHeap()
+{
+    heap_size = Heap.length();
+    for (int i = floor(heap_size / 2); i > 0; i--)
+    {
+        maxHeapify(i);
+    }
+}
+
+template <class T>
+void heap<T>::maxHeapify(int& i)
+{
+    int l = Heap.left(i);
+    int r = Heap.right(i);
+    int largest;
+    if (l <= heap_size && Heap[l] > Heap[i])
+    {
+        largest = l;
+    }
+    else
+    {
+        largest = r;
+    }   // end if
+    if (r <= heap_size && Heap[r] > Heap[largest])
+    {
+        largest = r;
+    }   // end if
+    if (largest != i)
+    {
+        T biggest = Heap[largest];
+        Heap[largest] = Heap[i];
+        Heap[i] = biggest;
+    }    
+}
+#pragma endregion Heap
+//=============================================================================
 // Global Functions
 //=============================================================================
 #pragma region func
@@ -356,10 +489,11 @@ void search()
     //sort the dictionary file.
     dictionary dict;
     dict.readDict(dict_file_name);
-    dict.sort();
+    dict.qsort();
 
     cout << "\nFinished Sorting the Dictionary!\n";
 
+    /*
     //identify the grid to search for words
     string grid_file_name;
     cout << "Please enter the file name for your grid: \n";
@@ -371,6 +505,7 @@ void search()
 
     //find all possible words from the grid
     findMatches(newGrid, dict);
+    */
 }
 
 #pragma endregion func
