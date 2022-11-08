@@ -5,7 +5,7 @@ class heap
 {
 private:
     std::vector<T> Heap;
-    int heapsize;
+    int heap_size;
     int length;
 public:
     heap();
@@ -13,9 +13,9 @@ public:
     int parent(const int& n);
     int left(const int& n);
     int right(const int& n);
-    void initializeMaxHeap();
-    void maxHeapify(std::vector<T>& list, int& i);
-    void buildMaxHeap(const std::vector<T>& list);
+    void initializeMaxHeap(const std::vector<T>& list);
+    void maxHeapify(int& i);
+    void buildMaxHeap();
 
     void heapsort();
 };

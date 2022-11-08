@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Project#3
-// Word Search: Part A
+// Word Search: Part B
 // Written by:
 // James Napier:                                      napier.j@northeastern.edu
 // Julia Rasmussen:                                rasmussen.j@northeastern.edu
 // Samuel Sheehan:                                   sheehan.s@northeastern.edu
 //
-// Main program file for homework 3a. Contains declarations for
+// Main program file for homework 3b.
 //
 ///////////////////////////////////////////////////////////////////////////////
 #include <iostream>
@@ -109,7 +109,7 @@ void dictionary::qsort(int left, int right)
 * Sorts all words in the dictionary object using Quick Sort
 */
 {
-    if(right == 0)
+    if (right == 0)
     {
         right = wordList.size();
     }
@@ -134,6 +134,16 @@ void dictionary::qsort(int left, int right)
         qsort(left, i);
         qsort(i + 2, right);
     }
+}
+
+void dictionary::hsort()
+/*
+* Sorts all words in the dictionary object using Quick Sort
+*/
+{
+    heap<string> dictionary_heap;
+    dictionary_heap.initializeMaxHeap(wordList);
+    dictionary_heap.heapsort();
 }
 
 /*
@@ -389,7 +399,21 @@ void heap<T>::maxHeapify(int& i)
         T biggest = Heap[largest];
         Heap[largest] = Heap[i];
         Heap[i] = biggest;
-    }    
+    }
+}
+
+template <class T>
+void heap<T>::heapsort()
+{
+    heap_size = Heap.size();
+    while (heap_size >= 2)
+    {
+        maxHeapify(1); //idk how to make this an & int input
+        T temp = Heap[1];
+        Heap[1] = Heap[heap_size];
+        Heap[heap_size] = temp;
+        heap_size -= 1;
+    }
 }
 #pragma endregion Heap
 //=============================================================================
@@ -478,18 +502,34 @@ void findMatches(grid& searchGrid, dictionary& searchDictionary)
 
 /*
 * Searches for all words from grid and dictionary files.
+* selectionType: integer that indicates sorting type (1-selection sort, 2-heap sort, 3-quick sort)
 */
-void search()
+void search(int selectionType)
 {
     //identify the dictionary to search for words
     string dict_file_name;
     cout << "Please enter the file name for your dictionary: \n";
     cin >> dict_file_name;
 
-    //sort the dictionary file.
+    //sort the dictionary file, depending on int selectionType.
     dictionary dict;
     dict.readDict(dict_file_name);
-    dict.qsort();
+
+    //selection sort
+    if (selectionType == 1)
+    {
+        dict.sort();
+    }
+    //heap sort
+    else if (selectionType == 2)
+    {
+        dict.hsort();
+    }
+    //quick sort
+    else
+    {
+        dict.qsort();
+    }
 
     cout << "\nFinished Sorting the Dictionary!\n";
 
@@ -512,6 +552,27 @@ void search()
 //=============================================================================
 int main()
 {
+    //get sort type
+    bool sort_defined = false;
+    int sort_type_input;
+    cout << "The dictionary will be sorted with the following input: \n";
+    cout << "1 - Selection Sort\n";
+    cout << "2 - Heap Sort\n";
+    cout << "3 - Quick Sort\n";
+    while (!sort_defined)
+    {
+        cout << "How do you want to sort the dictionary? \n";
+        cin >> sort_type_input;
+        if ((sort_type_input == 1) || (sort_type_input == 2) || (sort_type_input == 3))
+        {
+            sort_defined = true;
+        }
+        else
+        {
+            cout << "Please enter a valid input. \n";
+        }
+    }
+
     //start search function.
-    search();
+    search(sort_type_input);
 }
