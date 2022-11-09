@@ -13,8 +13,9 @@ public:
     int parent(const int& n);
     int left(const int& n);
     int right(const int& n);
+    int getHeapSize();
     void initializeMaxHeap(const std::vector<T>& list);
-    void maxHeapify(int& i);
+    void maxHeapify(int i);
     void buildMaxHeap();
 
     void heapsort();

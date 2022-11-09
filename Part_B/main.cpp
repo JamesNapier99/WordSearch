@@ -138,12 +138,15 @@ void dictionary::qsort(int left, int right)
 
 void dictionary::hsort()
 /*
-* Sorts all words in the dictionary object using Quick Sort
+* Sorts all words in the dictionary object using Heap Sort
 */
 {
     heap<string> dictionary_heap;
     dictionary_heap.initializeMaxHeap(wordList);
+    dictionary_heap.buildMaxHeap();
     dictionary_heap.heapsort();
+    for(int i = 1; i <= dictionary_heap.getHeapSize(); i++)
+        wordList[i-1] = dictionary_heap.getItem[i];
 }
 
 /*
@@ -369,7 +372,7 @@ void heap<T>::initializeMaxHeap(const vector<T>& list)
 template <class T>
 void heap<T>::buildMaxHeap()
 {
-    heap_size = Heap.length();
+    heap_size = Heap.size();
     for (int i = floor(heap_size / 2); i > 0; i--)
     {
         maxHeapify(i);
@@ -377,10 +380,16 @@ void heap<T>::buildMaxHeap()
 }
 
 template <class T>
-void heap<T>::maxHeapify(int& i)
+int heap<T>::getHeapSize()
 {
-    int l = Heap.left(i);
-    int r = Heap.right(i);
+    return Heap.size();
+}
+
+template <class T>
+void heap<T>::maxHeapify(int i)
+{
+    int l = left(i);
+    int r = right(i);
     int largest;
     if (l <= heap_size && Heap[l] > Heap[i])
     {
@@ -399,6 +408,7 @@ void heap<T>::maxHeapify(int& i)
         T biggest = Heap[largest];
         Heap[largest] = Heap[i];
         Heap[i] = biggest;
+        maxHeapify(largest);
     }
 }
 
@@ -408,11 +418,11 @@ void heap<T>::heapsort()
     heap_size = Heap.size();
     while (heap_size >= 2)
     {
-        maxHeapify(1); //idk how to make this an & int input
         T temp = Heap[1];
         Heap[1] = Heap[heap_size];
         Heap[heap_size] = temp;
         heap_size -= 1;
+        maxHeapify(1);
     }
 }
 #pragma endregion Heap
