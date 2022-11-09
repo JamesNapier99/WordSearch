@@ -78,11 +78,13 @@ ostream& operator << (ostream& ostr, const dictionary& rhs)
 }
 
 /*
-* Sorts all words in the dictionary object alphabetically.
+* Sorts all words in the dictionary object alphabetically using selection sort.
 */
 void dictionary::sort()
 {
     string swap;
+    
+    //loop through the vector and check for the smallest word at each step.
     for (int i = 0; i < wordList.size() - 2; i++)
     {
         cout << i << " of " << wordList.size() << "\n";
@@ -94,9 +96,10 @@ void dictionary::sort()
                 pos = j;
             }
         }
+        
+        //swaps the current word with the next smallest word
         if (pos != i)
         {
-            //cout << "Swapping " << wordList[i] << " and " << wordList[pos] << endl;
             swap = wordList[i];
             wordList[i] = wordList[pos];
             wordList[pos] = swap;
@@ -104,10 +107,12 @@ void dictionary::sort()
     }
 }
 
-void dictionary::qsort(int left, int right)
 /*
-* Sorts all words in the dictionary object using Quick Sort
+* Sorts through the dictionary using quick sort.
+* left: the left-most index to search in.
+* right: the right-most index to search in.
 */
+void dictionary::qsort(int left, int right)
 {
     if (right == 0)
     {
@@ -136,15 +141,20 @@ void dictionary::qsort(int left, int right)
     }
 }
 
-void dictionary::hsort()
 /*
 * Sorts all words in the dictionary object using Heap Sort
 */
+void dictionary::hsort()
 {
+    //copy wordList into a heap
     heap<string> dictionary_heap;
     dictionary_heap.initializeMaxHeap(wordList);
     dictionary_heap.buildMaxHeap();
+    
+    //heap sort this wordList copy
     dictionary_heap.heapsort();
+    
+    //replace the words in the wordList with the sorted list from the heap
     for(int i = 1; i <= dictionary_heap.getHeapSize(); i++)
         wordList[i-1] = dictionary_heap.getItem(i);
 }
@@ -282,7 +292,7 @@ matrix<string> grid::getFullRows()
             //get all vertical rows
             allFullRows[i + n][j] = letters[j][i];
 
-            //get first horizontal row
+            //get diagonals from top-most left to bottom-most right
             int checkR = i + j;
             if (checkR >= n)
             {
@@ -290,7 +300,7 @@ matrix<string> grid::getFullRows()
             }
             allFullRows[i + 2 * n][j] = letters[checkR][j];
 
-            //second horizontal row
+            //get diagonals from bottom-most left to top-most right
             checkR = i - j;
             if (checkR < 0)
             {
@@ -311,11 +321,21 @@ matrix<string> grid::getFullRows()
 #pragma region Heap
 template <class T>
 
+/*
+* Get the item at index n in the heap.
+* n: the index of the item to return.
+* returns the object in the heap at n.
+*/
 T heap<T>::getItem(const int& n)
 {
     return Heap[n];
 }
 
+/*
+* Get the index of the parent for the given item.
+* n: the index of the item to return the parent of.
+* returns the index of the parent for n.
+*/
 template <class T>
 int heap<T>::parent(const int& n)
 {
@@ -329,6 +349,11 @@ int heap<T>::parent(const int& n)
     }
 }
 
+/*
+* Get the index of the left child for the given item.
+* n: the index of the item to return the left child of.
+* returns the index of the left child for n.
+*/
 template <class T>
 int heap<T>::left(const int& n)
 {
@@ -342,6 +367,11 @@ int heap<T>::left(const int& n)
     }
 }
 
+/*
+* Get the index of the right child for the given item.
+* n: the index of the item to return the right child of.
+* returns the index of the right child for n.
+*/
 template <class T>
 int heap<T>::right(const int& n)
 {
@@ -354,7 +384,10 @@ int heap<T>::right(const int& n)
         return -1;
     }
 }
-// Not sure if this works
+
+/*
+* Initialize the heap object.
+*/
 template <class T>
 heap<T>::heap()
 {
@@ -362,13 +395,19 @@ heap<T>::heap()
     Heap = placeholder;
 }
 
+/*
+* Initialize the values for the heap, from the given vector.
+* list: the vector with values to copy into the heap.
+*/
 template <class T>
 void heap<T>::initializeMaxHeap(const vector<T>& list)
 {
     Heap = list;
 }
 
-
+/*
+* The heap is sorted into a max heap.
+*/
 template <class T>
 void heap<T>::buildMaxHeap()
 {
@@ -379,12 +418,19 @@ void heap<T>::buildMaxHeap()
     }
 }
 
+/*
+* Returns the heap size of the heap.
+*/
 template <class T>
 int heap<T>::getHeapSize()
 {
     return Heap.size();
 }
 
+/*
+* Max heapifies the heap, from the node at i.
+* i: the node to start the max heapify from.
+*/
 template <class T>
 void heap<T>::maxHeapify(int i)
 {
@@ -412,6 +458,9 @@ void heap<T>::maxHeapify(int i)
     }
 }
 
+/*
+* Sorts the heap recursively.
+*/
 template <class T>
 void heap<T>::heapsort()
 {
@@ -575,6 +624,8 @@ int main()
     cout << "1 - Selection Sort\n";
     cout << "2 - Heap Sort\n";
     cout << "3 - Quick Sort\n";
+    
+    //ensure that a valid sort type is inputted.
     while (!sort_defined)
     {
         cout << "How do you want to sort the dictionary? \n";
