@@ -146,7 +146,7 @@ void dictionary::hsort()
     dictionary_heap.buildMaxHeap();
     dictionary_heap.heapsort();
     for(int i = 1; i <= dictionary_heap.getHeapSize(); i++)
-        wordList[i-1] = dictionary_heap.getItem[i];
+        wordList[i-1] = dictionary_heap.getItem(i);
 }
 
 /*
@@ -397,7 +397,7 @@ void heap<T>::maxHeapify(int i)
     }
     else
     {
-        largest = r;
+        largest = i;
     }   // end if
     if (r <= heap_size && Heap[r] > Heap[largest])
     {
@@ -516,6 +516,7 @@ void findMatches(grid& searchGrid, dictionary& searchDictionary)
 */
 void search(int selectionType)
 {
+    bool debug = false;
     //identify the dictionary to search for words
     string dict_file_name;
     cout << "Please enter the file name for your dictionary: \n";
@@ -543,19 +544,24 @@ void search(int selectionType)
 
     cout << "\nFinished Sorting the Dictionary!\n";
 
-    /*
-    //identify the grid to search for words
-    string grid_file_name;
-    cout << "Please enter the file name for your grid: \n";
-    cin >> grid_file_name;
+    if (debug == false)
+    {
+        //identify the grid to search for words
+        string grid_file_name;
+        cout << "Please enter the file name for your grid: \n";
+        cin >> grid_file_name;
 
-    //initialize the grid object, then print it out
-    grid newGrid(grid_file_name);
-    cout << newGrid;
+        //initialize the grid object, then print it out
+        grid newGrid(grid_file_name);
+        cout << newGrid;
 
-    //find all possible words from the grid
-    findMatches(newGrid, dict);
-    */
+        //find all possible words from the grid
+        findMatches(newGrid, dict);
+    }   
+    else
+    {
+        cout << dict;
+    }
 }
 
 #pragma endregion func
